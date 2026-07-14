@@ -1,0 +1,69 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+	html {
+		color-scheme: dark;
+	}
+	body {
+		background-image: theme('backgroundImage.aurora');
+		background-attachment: fixed;
+	}
+	::selection {
+		background: rgba(124, 111, 255, 0.35);
+	}
+	* {
+		scrollbar-width: thin;
+		scrollbar-color: #262d47 transparent;
+	}
+	*:focus-visible {
+		outline: 2px solid #9d8cff;
+		outline-offset: 2px;
+		border-radius: 4px;
+	}
+	h1, h2, h3, h4 {
+		font-family: theme('fontFamily.display');
+		letter-spacing: -0.02em;
+	}
+}
+
+@layer components {
+	.glass {
+		@apply bg-ink-800/60 backdrop-blur-xl border border-white/[0.06];
+	}
+	.glass-card {
+		@apply glass rounded-2xl shadow-card;
+	}
+	.grid-surface {
+		background-image: theme('backgroundImage.grid-graph');
+		background-size: theme('backgroundSize.grid-sm');
+		mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 100%);
+	}
+	.btn {
+		@apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold
+			transition-all duration-200 active:scale-[0.97] disabled:opacity-40 disabled:pointer-events-none;
+	}
+	.btn-primary {
+		@apply btn bg-gradient-to-br from-violet-500 to-violet-600 text-white shadow-glow hover:brightness-110;
+	}
+	.btn-ghost {
+		@apply btn glass text-ink-200 hover:text-white hover:border-white/[0.14];
+	}
+	.pill {
+		@apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium;
+	}
+	.badge-beginner { @apply pill bg-cyan-500/10 text-cyan-400 border border-cyan-500/20; }
+	.badge-intermediate { @apply pill bg-amber-500/10 text-amber-400 border border-amber-500/20; }
+	.badge-advanced { @apply pill bg-coral-500/10 text-coral-400 border border-coral-500/20; }
+
+	.perspective { perspective: 1600px; }
+	.preserve-3d { transform-style: preserve-3d; }
+	.backface-hidden { backface-visibility: hidden; }
+	.rotate-y-180 { transform: rotateY(180deg); }
+}
+
+@layer utilities {
+	.no-scrollbar::-webkit-scrollbar { display: none; }
+	.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+}
