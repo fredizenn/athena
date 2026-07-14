@@ -71,7 +71,7 @@
 	let sessionCorrect = 0;
 	let sessionTotal = 0;
 	let finished = false;
-	let cardKey = 0; // forces Flashcard remount/reset between cards
+	let sessionId = 0; // bumped (via plain assignment) only when the deck itself is rebuilt/restarted
 	let timeLeft = 60;
 	let timerInterval: ReturnType<typeof setInterval> | undefined;
 
@@ -83,7 +83,11 @@
 		sessionCorrect = 0;
 		sessionTotal = 0;
 		finished = deck.length === 0;
-		cardKey++;
+		// Plain assignment (not `sessionId++`) is deliberate: an increment would read
+		// sessionId too, which would make this block depend on itself and re-run (and
+		// reset the whole session) every time sessionId changes elsewhere — which is
+		// exactly the bug that used to make "Got it" appear to do nothing.
+		sessionId = Date.now();
 		startTimerIfNeeded();
 	}
 
@@ -110,7 +114,6 @@
 				clearInterval(timerInterval);
 			} else {
 				index++;
-				cardKey++;
 				startTimerIfNeeded();
 			}
 		}, 550);
@@ -122,7 +125,7 @@
 		sessionCorrect = 0;
 		sessionTotal = 0;
 		finished = false;
-		cardKey++;
+		sessionId = Date.now();
 		startTimerIfNeeded();
 	}
 
@@ -186,7 +189,7 @@
 		<p class="mb-3 text-center text-xs font-medium uppercase tracking-wide text-ink-500">
 			Card {index + 1} of {deck.length}
 		</p>
-		{#key cardKey}
+		{#key `${sessionId}-${index}`}
 			<div in:fly={{ x: 40, duration: 300 }}>
 				<Flashcard
 					card={mode === 'interview' && currentCard.interview_question
